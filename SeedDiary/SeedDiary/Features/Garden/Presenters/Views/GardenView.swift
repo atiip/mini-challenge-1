@@ -9,14 +9,17 @@ import SwiftUI
 import CoreData
 
 public struct GardenView: View {
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
     //    @StateObject var viewGarden: GardenViewModel
-
+    // TODO: masukin goals view model dan activity view model
     @State var isAddGoalsViewPresented = false
     @State var isAddActivityViewPresented = false
 //    let date = Date()
 //    @State var totalDistinctGoals: Int = 0
 //    @State var isShowingCreateFirstGoal: Bool = false
 //    @State var isJournalViewPresented: Bool = false
+    @State var isFirstGoals = false
+    @State var addFirstGoal = false
     
     public var body: some View {
         ZStack{
@@ -85,11 +88,11 @@ public struct GardenView: View {
                 }
             }
             .sheet(isPresented: $isAddGoalsViewPresented) {
-                AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented) .presentationDetents([.height(700)])
+                AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoal) .presentationDetents([.height(700)])
                     .presentationDragIndicator(.visible)
             }
             .sheet(isPresented: $isAddActivityViewPresented) {
-              DetailActivitesView(isAddActivityViewPresented: $isAddActivityViewPresented).presentationDragIndicator(.visible)
+              DetailActivitesView(isAddActivityViewPresented: $isAddActivityViewPresented).presentationDragIndicator(.visible).environmentObject(userViewModel)
             }
             
         }

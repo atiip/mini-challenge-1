@@ -10,16 +10,17 @@ import CoreData
 
 struct ContentView: View {
     @EnvironmentObject var router: Router
-    @StateObject var personalInformationViewModel = PersonalInformationViewModel()
+//    @StateObject var personalInformationViewModel = PersonalInformationViewModel()
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @StateObject var goalsViewModel = GoalsViewModel()
     @State private var selectedTab = 0
+    @State private var username = ""
     var body: some View {
-      
             VStack(alignment: .center){
                 // Content
-                
                 switch selectedTab{
                 case 1:
-                    GardenView()
+                    GardenView().environmentObject(userViewModel)
                 case 2:
                     StatisticView()
                 default:
@@ -75,7 +76,11 @@ struct ContentView: View {
             .navigationBarBackButtonHidden(true)
             .edgesIgnoringSafeArea(.bottom)
             .onAppear{
-                personalInformationViewModel.getName()
+//                let user = personalInformationViewModel.getUserByUserId(userId: personalInformationViewModel.userId)
+//                goalsViewModel.getGoalsByUser(forPersonalInformation: (user)!)
+//                print(goalsViewModel.filteredGoalsByUser)
+//                self.username = (user?.name)!
+//                print(username)
             }
       
     }
@@ -85,6 +90,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(Router())
+        ContentView()
+            .environmentObject(Router())
+            .environmentObject(PersonalInformationViewModel())
     }
 }

@@ -6,18 +6,28 @@
 //
 
 import SwiftUI
+//import Inject
+@_exported import Inject
 
 struct OpeningComponent: View {
     let page: OpeningModel
     @State var finalText: String = ""
+    @State var isShowingSheet = false
     //    @State var name = ""
     //    @State var pageIndex = 0
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @State var isAddGoalsViewPresented: Bool = false
+    @State var isFirstGoals: Bool = false
+    
     @Binding var name: String
     @Binding var pageIndex: Int
-    @State var isShowingSheet = false
     @Binding var isTextFieldFilled: Bool
+    @Binding var addFirstGoalsComplete: Bool
     
-    @StateObject var personalInformationViewModel = PersonalInformationViewModel()
+    @AppStorage("userID") var userID: String = ""
+    @ObservedObject private var iO = Inject.observer
+ 
+    
     var body: some View {
         ZStack {
             Image(page.backimageUrl)
@@ -47,7 +57,7 @@ struct OpeningComponent: View {
                                     else{
                                         isTextFieldFilled = false
                                     }
-//
+                                    //
                                 }
                         }
                     }
@@ -64,31 +74,66 @@ struct OpeningComponent: View {
                 Spacer().frame(height: 200)
                 if pageIndex == OpeningModel.samplePages.count-1 && isTextFieldFilled == true {
                     ZStack{
+//                        Button(action: {
+//                            isAddGoalsViewPresented.toggle()
+//                        }) {
+//                            ZStack{
+//                                RoundedRectangle(cornerRadius: 20)
+//                                    .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
+//                                    .frame(width: 350, height: 50)
+//                                Text("START YOUR JOURNEY HERE")
+//                                    .foregroundColor(.white)
+//                            }
+//                        }
+//                        .simultaneousGesture(TapGesture().onEnded {
+//                            personalInformationViewModel.createName(name: name)
+//                            isFirstGoals = true
+//                        })
                         
-                        Button(action: {
-                        }) {
-                            NavigationLink(destination:ContentView()) {
-                                ZStack{
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
-                                        .frame(width: 350, height: 50)
-                                    Text("START YOUR JOURNEY HERE")
-                                        .foregroundColor(.white)
+                            Button(action: {
+                            }) {
+//                                NavigationLink(destination: ContentView()) {
+//                                    ZStack{
+//                                        RoundedRectangle(cornerRadius: 20)
+//                                            .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
+//                                            .frame(width: 350, height: 50)
+//                                        Text("START YOUR JOURNEY HERE")
+//                                            .foregroundColor(.white)
+//                                    }
+//                                }
+                                NavigationLink(destination: AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete)) {
+                                    ZStack{
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
+                                            .frame(width: 350, height: 50)
+                                        Text("START YOUR JOURNEY HERE")
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                            }
+                            .simultaneousGesture(TapGesture().onEnded {
+                                userViewModel.createUser(username: name)
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                                    let user = userViewModel.getLatestUser()
+                                    let stringId = user?.id?.uuidString
+                                    print("string id: \(stringId)")
+                                    UserDefaults.standard.set(stringId, forKey: "userID")
+                                    
+                                    print("user id dari user default: \(UserDefaults.standard.string(forKey: "userID"))")
+//                                    print(String(user.name!))
                                 }
                                 
-                            }
-                        }
-                          .simultaneousGesture(TapGesture().onEnded {
-                              personalInformationViewModel.createName(name: name)
-                              print("goal")
-                          })
+                               
+                                isFirstGoals = true
+                            })
+                        //
                     }
-                   
+                    
                 }
                 else if pageIndex == OpeningModel.samplePages.count-1 && isTextFieldFilled == false {
                     ZStack{
                         Button{
-                           
+                            
                         } label: {
                             ZStack{
                                 RoundedRectangle(cornerRadius: 20)
@@ -107,9 +152,21 @@ struct OpeningComponent: View {
                         .bold()
                 }
             }
-        }
-       
+        }.enableInjection()
         
+        .sheet(isPresented: $isAddGoalsViewPresented) {
+            AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete) .presentationDetents([.height(700)])
+                .presentationDragIndicator(.visible)
+                .onDisappear{
+                    print("hasil")
+                    print(addFirstGoalsComplete)
+                    if addFirstGoalsComplete {
+                        NavigationLink(destination: ContentView().environmentObject(userViewModel), isActive: $addFirstGoalsComplete) {
+                            EmptyView() // EmptyView digunakan untuk mengaktifkan NavigationLink secara dinamis
+                        }
+                    }
+                }
+        }
         
     }
     
@@ -130,14 +187,12 @@ struct OpeningComponent: View {
             typeWriter(at: page.description.startIndex)
         }
     }
-    
 }
-
-
 struct OpeningComponent_Previews: PreviewProvider {
     static var previews: some View {
         
-        OpeningComponent(page: OpeningModel.samplePages[1], name: .constant("bro"), pageIndex: .constant(1), isTextFieldFilled: .constant(false))
+        OpeningComponent(page: OpeningModel.samplePages[1], name: .constant("bro"), pageIndex: .constant(1), isTextFieldFilled: .constant(false), addFirstGoalsComplete: .constant(false))
         //        OpeningComponent(page: OpeningModel.samplePage)
     }
 }
+

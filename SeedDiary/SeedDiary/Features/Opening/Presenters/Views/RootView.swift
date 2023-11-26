@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject var router: Router
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
     @State private var isFirstLogin = true
     @State private var isOpening = false
     var body: some View {
@@ -27,9 +28,12 @@ struct RootView: View {
                 .background(Color.white)
                 if isOpening{
                     OpeningView()
+                        .environmentObject(router)
+                        .environmentObject(userViewModel)
                 }else{
-                
-                    ContentView().environmentObject(router)
+                    ContentView()
+                        .environmentObject(router)
+                        .environmentObject(userViewModel)
                 }
             }
             .onAppear{

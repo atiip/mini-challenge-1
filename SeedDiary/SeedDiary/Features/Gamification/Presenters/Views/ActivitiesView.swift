@@ -15,7 +15,8 @@ struct ActivitiesView: View {
         "Find Happiness Today",
         "Lets Process Our Day"
     ]
-    
+    @StateObject var journalsViewModel: JournalsViewModel = JournalsViewModel()
+    @StateObject var ActivitiesViewModel: ActivityViewModel = ActivityViewModel()
     @State private var mood = ""
     @State private var isTaskActive = true
     
@@ -38,6 +39,7 @@ struct ActivitiesView: View {
     @State private var scale = 1.0
     @State var pola: CircleVariationModel
     @State var listDataGoal: [Goal] = []
+    @State var listDataActivity: [Activity] = []
     @State var listJournal: [Journal] = []
     @State var listDailyMoods: [Mood] = []
     @State var listActivityTrue: [Goal] = []
@@ -161,38 +163,38 @@ struct ActivitiesView: View {
                         
                         .padding(EdgeInsets(top: 50, leading: 12, bottom: 0, trailing: 12))
                         Spacer()
-                        ZStack{
-                            //bar
-                            
-                            
-                            
-                                ForEach(listDataGoal.indices, id: \.self) { idx in
-                                    //                            Text((pola.circles[idx].isAppear) ? "true" : "false")
-                                    //                            if (pola.circles[idx].isAppear == true){
-                                    //                                BigBubble(idx: idx, pola: $pola, totalActivity: $totalActivity, isTaskActive: $isTaskActive)
-                                    //                            }
-                                    
-                                    if var status = listDataGoal[idx].status as? Bool, !status {
-                                        var activityName = listDataGoal[idx].activity ?? ""
-                                        var goalName = listDataGoal[idx].goal ?? ""
-//                                        goalName = actName
-                                        MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: idx, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal,labelCircle: "Activity", showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, activityName: activityName, progressBarActive: $progressBarActive, goalName: goalName, totalActivityProgress: $totalActivityProgress, stepDone: $stepDone,  statusProgress :$statusProgress, containerWidth: $containerWidth
-                                                       
-                                        ).environmentObject(router)
-                                    }
-                                }
-                                
-                                if showJournal {
-                                    MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: -1, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal, labelCircle: "Journal", showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, progressBarActive: $progressBarActive, goalName: goalName,  totalActivityProgress: $totalActivityProgress, stepDone: $stepDone,  statusProgress :$statusProgress, containerWidth: $containerWidth
-                                    ).environmentObject(router)
-                                }
-                                
-                                if showDailyMood{
-                                    MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: -1, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal, labelCircle: "Daily Mood",showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, progressBarActive: $progressBarActive, goalName: goalName,  totalActivityProgress: $totalActivityProgress, stepDone: $stepDone, statusProgress :$statusProgress, containerWidth: $containerWidth
-                                    ).environmentObject(router)
-                                    
-                                }
-                        }.frame(width: screenSize.width,height: screenSize.height * 0.6)
+//                        ZStack{
+//                            //bar
+//                            
+//
+//
+//                                ForEach(listDataGoal.indices, id: \.self) { idx in
+//                                    //                            Text((pola.circles[idx].isAppear) ? "true" : "false")
+//                                    //                            if (pola.circles[idx].isAppear == true){
+//                                    //                                BigBubble(idx: idx, pola: $pola, totalActivity: $totalActivity, isTaskActive: $isTaskActive)
+//                                    //                            }
+//
+//                                    if var status = listDataGoal[idx].status as? Bool, !status {
+//                                        var activityName = listDataGoal[idx].activities. ?? ""
+//                                        var goalName = listDataGoal[idx].goal ?? ""
+////                                        goalName = actName
+//                                        MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: idx, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal,labelCircle: "Activity", showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, activityName: activityName, progressBarActive: $progressBarActive, goalName: goalName, totalActivityProgress: $totalActivityProgress, stepDone: $stepDone,  statusProgress :$statusProgress, containerWidth: $containerWidth
+//
+//                                        ).environmentObject(router)
+//                                    }
+//                                }
+//
+//                                if showJournal {
+//                                    MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: -1, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal, labelCircle: "Journal", showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, progressBarActive: $progressBarActive, goalName: goalName,  totalActivityProgress: $totalActivityProgress, stepDone: $stepDone,  statusProgress :$statusProgress, containerWidth: $containerWidth
+//                                    ).environmentObject(router)
+//                                }
+//
+//                                if showDailyMood{
+//                                    MorphingCircle(duration: 3.0, points: 4, secting: 2, size: 150, outerSize: 30, morphingRange: 10, idx: -1, pola: $pola, isUpdated: $updated, totalActivity: $totalActivity, isTaskActive: $isTaskActive, listDataGoal: $listDataGoal, labelCircle: "Daily Mood",showJournal: $showJournal, showDailyMood: $showDailyMood, isSheetMoodActive: $isSheetMoodActive, isSubmitDailyMood:$isSubmitDailyMood, progressBarActive: $progressBarActive, goalName: goalName,  totalActivityProgress: $totalActivityProgress, stepDone: $stepDone, statusProgress :$statusProgress, containerWidth: $containerWidth
+//                                    ).environmentObject(router)
+//
+//                                }
+//                        }.frame(width: screenSize.width,height: screenSize.height * 0.6)
                         Image("home-bg")
                             .resizable()
                             .frame(width: 280, height: 160)
@@ -252,6 +254,7 @@ struct ActivitiesView: View {
         }
         .onAppear {
             print("List \(listDataGoal)")
+            
             
 //            1. listGoal ambil nama Goals
 //            2. nama goal masuk ke state name goal

@@ -1,22 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22F82" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Goal" representedClassName="Goal" syncable="YES" codeGenerationType="class">
-        <attribute name="activity" optional="YES" attributeType="String"/>
+    <entity name="Activity" representedClassName="Activity" syncable="YES" codeGenerationType="class">
+        <attribute name="activityName" optional="YES" attributeType="String"/>
+        <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="goal" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="status" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="goals" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Goal" inverseName="activities" inverseEntity="Goal"/>
+    </entity>
+    <entity name="Goal" representedClassName="Goal" syncable="YES" codeGenerationType="class">
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="goal" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="status" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="goals" inverseEntity="Activity"/>
+        <relationship name="users" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Personal_Information" inverseName="goals" inverseEntity="Personal_Information"/>
     </entity>
     <entity name="Journal" representedClassName="Journal" syncable="YES" codeGenerationType="class">
         <attribute name="content" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="journalDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="users" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Personal_Information" inverseName="journals" inverseEntity="Personal_Information"/>
     </entity>
     <entity name="Mood" representedClassName="Mood" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="mood" optional="YES" attributeType="String"/>
         <attribute name="moodDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="users" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Personal_Information" inverseName="moods" inverseEntity="Personal_Information"/>
     </entity>
     <entity name="Personal_Information" representedClassName="Personal_Information" syncable="YES" codeGenerationType="class">
-        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="goals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Goal" inverseName="users" inverseEntity="Goal"/>
+        <relationship name="journals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Journal" inverseName="users" inverseEntity="Journal"/>
+        <relationship name="moods" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Mood" inverseName="users" inverseEntity="Mood"/>
     </entity>
 </model>

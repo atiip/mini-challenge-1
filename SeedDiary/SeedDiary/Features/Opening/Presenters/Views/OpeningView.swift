@@ -8,11 +8,15 @@
 import SwiftUI
 
 struct OpeningView: View {
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
     @State private var pageIndex = 0
     private var pages: [OpeningModel] = OpeningModel.samplePages
     private let dotAppearance = UIPageControl.appearance()
     @State var name: String = ""
     @State private var isTextFieldFilled = false
+    @State var addFirstGoalsComplete = false
+    
     
     var body: some View {
         ZStack{
@@ -21,7 +25,7 @@ struct OpeningView: View {
                     
                     VStack {
                         Spacer()
-                        OpeningComponent(page: page, name: $name, pageIndex: $pageIndex, isTextFieldFilled: $isTextFieldFilled)
+                        OpeningComponent(page: page, name: $name, pageIndex: $pageIndex, isTextFieldFilled: $isTextFieldFilled, addFirstGoalsComplete: $addFirstGoalsComplete).environmentObject(userViewModel)
                     }
                     .tag(page.tag)
                     .ignoresSafeArea()
