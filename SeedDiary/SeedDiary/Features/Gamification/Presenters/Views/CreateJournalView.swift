@@ -18,10 +18,10 @@ struct CreateJournalView: View {
     @Binding var isJournalViewPresented:Bool
     @Binding var isSubmitJournal:Bool
     @StateObject var journalsViewModel: JournalsViewModel = JournalsViewModel()
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
     
     var body: some View {
         NavigationView{
-//            Spacer().frame(height: 40)
             VStack(alignment: .center){
                 Spacer()
                 
@@ -54,12 +54,21 @@ struct CreateJournalView: View {
                         if (title_.isEmpty || content_.isEmpty) {
                             showingAlert = true
                         }else{
+                            userViewModel.isFirstActivityCompleted = false
+                            userViewModel.isFirstActivity = true
+                            let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                            guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
+                                return
+                            }
+                           
                             let calender = Calendar.current
                             let startOfDay = calender.startOfDay(for: Date.now)
-                            journalsViewModel.createJournal(date: startOfDay, title: title_, content: content_)
+                            journalsViewModel.createJournal(user: user, date: startOfDay, title: title_, content: content_)
                             isSheetActivityActive = true
                             isJournalViewPresented = false
                             isSubmitJournal = true
+                            userViewModel.isFirstActivityCompleted = true
+                            userViewModel.isFirstActivity = false
                         }
                     } label: {
                         Capsule()
@@ -82,19 +91,6 @@ struct CreateJournalView: View {
             }.padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
             
         }
-//        .navigationBarBackButtonHidden(true)
-//
-//        .navigationBarItems(trailing:
-//              NavigationLink(destination: ContentView(), isActive: $isSheetActivityActive) {
-//          })
-            
-//        .sheet(isPresented: $isSheetActivityActive) {
-//                ActivitiesView()
-//                .presentationDetents([.height(700)])
-//                .presentationDragIndicator(.visible)
-//                 .navigationBarTitle("Create Journal")
-//            }
-        
     }
 }
 

@@ -10,16 +10,18 @@ import Foundation
 import CoreData
 
 struct MorphingCircle: View & Identifiable & Hashable {
-    static func == (lhs: MorphingCircle, rhs: MorphingCircle) -> Bool {
-        lhs.id == rhs.id
-    }
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
     
     let id = UUID()
     @State var morph: AnimatableVector = AnimatableVector.zero
     @State var timer: Timer?
+    
+    static func == (lhs: MorphingCircle, rhs: MorphingCircle) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
     
     func morphCreator() -> AnimatableVector {
         let range = Float(-morphingRange)...Float(morphingRange)
@@ -44,7 +46,7 @@ struct MorphingCircle: View & Identifiable & Hashable {
     var radius: CGFloat {
         outerSize / 2
     }
-   
+    
     var idx: Int
     @Binding var pola: CircleVariationModel
     @State var color: Color = Color.indigo
@@ -56,21 +58,14 @@ struct MorphingCircle: View & Identifiable & Hashable {
     @Binding var totalActivity:Int
     @Binding var isTaskActive:Bool
     
-    
     @State private var scale = 1.0
     @State var isExploded: Bool = false
     private let explodingBits: Int = 15
-    
-    @Binding var listDataGoal: [Goal]
-    
-
     
     @State var labelCircle = ""
     @State var isJournalViewPresented: Bool = false
     @State var isSubmitJournal: Bool = false
     @State var isDailyMoodPresented: Bool = false
-   
-    
     
     @Binding var showJournal: Bool
     @Binding var showDailyMood: Bool
@@ -79,21 +74,20 @@ struct MorphingCircle: View & Identifiable & Hashable {
     @State var activityName: String = ""
     @Binding var progressBarActive:Bool
     
-    @State var goalName: String = ""
-    @Binding var totalActivityProgress: Int
-    @Binding var stepDone: Int
-    @Binding var statusProgress: Double
-    @Binding var containerWidth: CGFloat
-    
+
     @EnvironmentObject var router: Router
+    @EnvironmentObject var moodsVM: MoodsViewModel
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @EnvironmentObject var activitiesVM: ActivityViewModel
+    
     var body: some View {
         ZStack{
             if (labelCircle == "Journal"){
                 ForEach(0..<explodingBits, id: \.self) { _ in
                     
-                    SmallCircle(idx: idx, pola: $pola,isExploded: isExploded, isOpacity: isOpacity, labelCircle:$labelCircle)
+                    SmallCircle(idx: idx, isExploded: isExploded, isOpacity: isOpacity, pola: $pola, labelCircle:$labelCircle)
                 }
-               
+                
                 MorphingCircleShape(morph)
                     .fill(Color("bg-mood-journal"))
                     .frame(width: 150, height: 150, alignment: .center)
@@ -109,38 +103,20 @@ struct MorphingCircle: View & Identifiable & Hashable {
                     }.onDisappear {
                         timer?.invalidate()
                     }
-    //                    .animation(.easeInOut.speed(0.6), value: checkOnTap)
                     .opacity(checkOnTap ? 0 : 1)
                     .onChange(of: isSubmitJournal) { newValue in
                         if newValue  {
                             withAnimation (Animation.easeInOut(duration: 0.5)){
                                 self.color = Color.indigo
-                                //                                        checkJournal.toggle()
                                 checkOnTap.toggle()
                                 isExploded.toggle()
                                 isOpacity.toggle()
-                    //                        print(, to: &<#T##TextOutputStream#>)
-                                
-                    //                        pola.circles[idx].isAppear = false
-                    //                        pola = Variation(jumlah: totalActivity).variasi
-                    //
-                    //                            listDataGoal[idx].status = true
-                                // Save
-//                                do {
-//                                    try Helper.viewContext.save()
-//                                } catch {
-//                                    print(error)
-//                                }
-//                                
                                 isUpdated = true
                                 
-                                print("Ini data listGoal \(listDataGoal)")
                                 pola = Variation(jumlah: totalActivity).variasi
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                                     
-                                    
-                                    print("ini adalah pola: \(pola)")
                                     if (totalActivity == 0){
                                         isTaskActive = false
                                     }
@@ -166,7 +142,7 @@ struct MorphingCircle: View & Identifiable & Hashable {
             else if (labelCircle == "Daily Mood"){
                 ForEach(0..<explodingBits, id: \.self) { _ in
                     
-                    SmallCircle(idx: idx, pola: $pola,isExploded: isExploded, isOpacity: isOpacity, labelCircle:$labelCircle)
+                    SmallCircle(idx: idx, isExploded: isExploded, isOpacity: isOpacity, pola: $pola, labelCircle:$labelCircle)
                 }
                 
                 MorphingCircleShape(morph)
@@ -184,38 +160,21 @@ struct MorphingCircle: View & Identifiable & Hashable {
                         }
                     }.onDisappear {
                         timer?.invalidate()
-                    }    //                    .animation(.easeInOut.speed(0.6), value: checkOnTap)
+                    }
                     .opacity(checkOnTap ? 0 : 1)
                     .onChange(of: isSubmitDailyMood) { newValue in
                         if newValue  {
                             withAnimation (Animation.easeInOut(duration: 0.5)){
                                 self.color = Color.indigo
-                                //                                        checkJournal.toggle()
                                 checkOnTap.toggle()
                                 isExploded.toggle()
                                 isOpacity.toggle()
-                    //                        print(, to: &<#T##TextOutputStream#>)
-                                
-                    //                        pola.circles[idx].isAppear = false
-                    //                        pola = Variation(jumlah: totalActivity).variasi
-                    //
-                    //                            listDataGoal[idx].status = true
-                                // Save
-//                                do {
-//                                    try Helper.viewContext.save()
-//                                } catch {
-//                                    print(error)
-//                                }
-                                
+                               
                                 isUpdated = true
                                 
-                                print("Ini data listGoal \(listDataGoal)")
-                                pola = Variation(jumlah: totalActivity).variasi
                                 
                                 DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                                     
-                                   
-                                    print("ini adalah pola: \(pola)")
                                     if (totalActivity == 0){
                                         isTaskActive = false
                                     }
@@ -243,7 +202,7 @@ struct MorphingCircle: View & Identifiable & Hashable {
             else{
                 ForEach(0..<explodingBits, id: \.self) { _ in
                     
-                    SmallCircle(idx: idx, pola: $pola,isExploded: isExploded, isOpacity: isOpacity, labelCircle:$labelCircle)
+                    SmallCircle(idx: idx, isExploded: isExploded, isOpacity: isOpacity, pola: $pola, labelCircle:$labelCircle)
                 }
                 
                 MorphingCircleShape(morph)
@@ -254,37 +213,29 @@ struct MorphingCircle: View & Identifiable & Hashable {
                     .onTapGesture(count: 2) {
                         withAnimation (Animation.easeInOut(duration: 0.5)){
                             self.color = Color.indigo
-                            //                                        checkJournal.toggle()
                             checkOnTap.toggle()
                             isExploded.toggle()
                             isOpacity.toggle()
-    //                        print(, to: &<#T##TextOutputStream#>)
                             
-    //                        pola.circles[idx].isAppear = false
-    //                        pola = Variation(jumlah: totalActivity).variasi
-    //
-                            listDataGoal[idx].status = true
-                            // Save
-//                            do {
-//                                try Helper.viewContext.save()
-//                            } catch {
-//                                print(error)
-//                            }
+                            activitiesVM.filteredActivityByUser[idx].status = true
+                            
+                            activitiesVM.filteredActivityByUser[idx].completeDate = Date()
+                            
+                            activitiesVM.save()
+                            let act = activitiesVM.filteredActivityByUser[idx]
+                            
+                            if let currentGoal = act.goals {
+                                activitiesVM.totalCurrentActivity = activitiesVM.getActivitiesByGoalInReturn(goal: currentGoal).count
+                                activitiesVM.totalActivityIsDone = activitiesVM.getCompletedActivityByUser(goal: currentGoal)
+                                activitiesVM.calculateActivityDone(totalActivity: activitiesVM.totalCurrentActivity, stepDone: activitiesVM.totalActivityIsDone, containerWidth: 250)
+                            }
                             
                             isUpdated = true
-//                            self.totalActivityProgress = Goal.getActivityByGoal(viewContext: PersistenceController.preview.container.viewContext, goal: goalName).count
-//
-//                            self.stepDone = Goal.getActivityCompleteByGoal(viewContext: PersistenceController.preview.container.viewContext, goal: goalName).count
-                            print("iNi total activity progress \(totalActivityProgress)")
-                                        
-                            print("Ini data listGoal \(listDataGoal)")
-                            pola = Variation(jumlah: totalActivity).variasi
                             
                             DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-                                
+
                                 progressBarActive = true
-                                statusProgress = calculateActivityDone(totalActivityProgress: totalActivityProgress, stepDone: stepDone, containerWidth: containerWidth)
-                                print("ini adalah pola: \(pola)")
+                                
                                 if (totalActivity == 0){
                                     isTaskActive = false
                                 }
@@ -300,7 +251,6 @@ struct MorphingCircle: View & Identifiable & Hashable {
                                 isExploded.toggle()
                                 isOpacity.toggle()
                                 scale -= 0.5
-                                print(activityName)
                             }
                         }
                     }
@@ -315,72 +265,32 @@ struct MorphingCircle: View & Identifiable & Hashable {
                     }.onDisappear {
                         timer?.invalidate()
                     }
-    //                    .animation(.easeInOut.speed(0.6), value: checkOnTap)
                     .opacity(checkOnTap ? 0 : 1)
                 
                 Text("\(activityName)")
-//                    .font(.system(size: 17))
                     .foregroundColor(.white)
                     .position(x:pola.circles[idx].position.x, y: pola.circles[idx].position.y)
-                   
-//
-//                    .frame(width: pola.circles[idx].size, height: pola.circles[idx].size, alignment: .center)
+                
             }
         }
         
+        // Sheet Journal
         .sheet(isPresented: $isJournalViewPresented) {
             ListJournalView(isJournalViewPresented: $isJournalViewPresented, isSubmitJournal: $isSubmitJournal)
+                .environmentObject(userViewModel)
                 .presentationDetents([.height(700)])
                 .presentationDragIndicator(.visible).environmentObject(router)
         }
-        
+        // Sheet daily mood
         .sheet(isPresented: $isDailyMoodPresented) {
             PopUpDailyMood(isSheetMoodActive: $isSheetMoodActive, mood: "", isSubmitDailyMood: $isSubmitDailyMood)
+                .environmentObject(userViewModel)
                 .presentationDetents([.height(300)])
                 .presentationDragIndicator(.visible)
-//        destination: DetailActivity(
-//            viewActivityModel: ActivityViewModel(viewContext: PersistenceController.preview.container.viewContext, goal: goal_)
-//        ),
         }
-//        .sheet(isPresented: $isDailyMoodPresented) {
-//
-//
-//        }
-            
-            
-//            if isDailyMoodPresented{
-//
-//            }
-       
     }
-//    func size(_ newSize: CGFloat) -> MorphingCircle {
-//            var sizeNew = self
-//            sizeNew.size = newSize
-//            return sizeNew
-//        }
-//    init(_ size:CGFloat = 300, morphingRange: CGFloat = 30, color: Color = .indigo, points: Int = 4,  duration: Double = 3.0, secting: Double = 2) {
-//        self.points = points
-////        self.color = color
-//        self.morphingRange = morphingRange
-//        self.duration = duration
-//        self.secting = secting
-//        self.size = morphingRange * 2 < size ? size - morphingRange * 2 : 5
-//        self.outerSize = size
-////        morph = AnimatableVector(values: [])
-////        update()
-//    }
-//
-//    func color(_ newColor: Color) -> MorphingCircle {
-//        var morphNew = self
-//        morphNew.color = newColor
-//        return morphNew
-//    }
 }
 
-public func calculateActivityDone(totalActivityProgress : Int, stepDone : Int, containerWidth: CGFloat)  -> Double {
-    return min(containerWidth / CGFloat(totalActivityProgress) * CGFloat(stepDone), containerWidth)
-}
 
-//struct Helper {
-//    public static let viewContext: NSManagedObjectContext = PersistenceController.preview.container.viewContext
-//}
+
+

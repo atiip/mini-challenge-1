@@ -10,6 +10,7 @@ import SwiftUI
 struct OpeningView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @EnvironmentObject var goalViewModel: GoalsViewModel
     @State private var pageIndex = 0
     private var pages: [OpeningModel] = OpeningModel.samplePages
     private let dotAppearance = UIPageControl.appearance()
@@ -26,6 +27,7 @@ struct OpeningView: View {
                     VStack {
                         Spacer()
                         OpeningComponent(page: page, name: $name, pageIndex: $pageIndex, isTextFieldFilled: $isTextFieldFilled, addFirstGoalsComplete: $addFirstGoalsComplete).environmentObject(userViewModel)
+                            .environmentObject(goalViewModel)
                     }
                     .tag(page.tag)
                     .ignoresSafeArea()

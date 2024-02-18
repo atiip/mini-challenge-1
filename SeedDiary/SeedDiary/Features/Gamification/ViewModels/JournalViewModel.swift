@@ -13,6 +13,8 @@ class JournalsViewModel: ObservableObject {
     
     @Published var journals: [Journal] = []
     
+    @Published var filteredJournalsByUsers: [Journal] = []
+    
     @Published var filteredJournalsByDate : [Journal] = []
 
     init () {
@@ -45,16 +47,36 @@ class JournalsViewModel: ObservableObject {
         }
     }
     
+    func getJournalsByUsers(forUser user:Personal_Information) {
+        let request = NSFetchRequest<Journal>(entityName: "Journal")
+        
+        let filter = NSPredicate(format: "users == %@", user)
+        request.predicate = filter
+        
+        do{
+            self.filteredJournalsByUsers = try viewContext.fetch(request)
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+   }
     
-    func createJournal(date:Date, title:String, content: String) {
+    
+    
+    func createJournal(user: Personal_Information,date:Date, title:String, content: String) {
         //        date.formatted(Date.FormatStyle().weekday(.abbreviated))
         let newJournal = Journal(context: viewContext)
         newJournal.title = title
         newJournal.journalDate = date
         newJournal.content = content
+        
+        newJournal.users = user
         save()
         self.getJournals()
+        self.getJournalsByUsers(forUser: user)
     }
+    
+    
     
     //get one data by goal
     func getJournal(title:String)-> Journal? {
@@ -83,7 +105,6 @@ class JournalsViewModel: ObservableObject {
         
         do {
             self.filteredJournalsByDate = try viewContext.fetch(request)
-            print("INI DATA LIST JOURNAL : \(self.filteredJournalsByDate)")
         } catch {
             let nsError = error as NSError
             print("Error: \(nsError), \(nsError.userInfo)")

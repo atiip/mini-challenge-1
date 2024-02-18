@@ -11,6 +11,7 @@ struct AddActivitySheet: View {
     @Environment(\.presentationMode) var presentationMode
     @State var activityTitle = ""
     @State var desc = ""
+    @State var completeDate_ = Date().dayBefore
     @State var startDate_ = Date()
     @State var endDate_ = Date().dayAfter
     
@@ -21,9 +22,6 @@ struct AddActivitySheet: View {
     @EnvironmentObject var goalsViewModel: GoalsViewModel
     @EnvironmentObject var userViewModel: PersonalInformationViewModel
 
-    
-    //    @Binding var isAddActivityViewPresented : Bool
-//    @State var goalId: UUID
     @State var currentGoalName: String?
     var body: some View {
         ZStack{
@@ -120,6 +118,7 @@ struct AddActivitySheet: View {
                 }
                 Spacer()
                 HStack(){
+                    
                     Button {
                         // Add dis later
 //                        presentationMode.wrappedValue.dismiss()
@@ -127,20 +126,20 @@ struct AddActivitySheet: View {
                             isShowingAlert = true
                         } else {
                             isLoading = true
-                            print("button clicked")
+                            
                             if let goalIdUserDefaults = UserDefaults.standard.string(forKey: "goalId"){
                                 let goalId = UUID(uuidString: goalIdUserDefaults)
-                                guard let user = userViewModel.getUserByUserId(userId: userViewModel.userId!) else {
-                                    print("nothing")
+                                
+                                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
                                     return
                                 }
                                 guard let goalObj = goalsViewModel.getGoal(goalId: goalId!, user: user) else {
                                     return
-                                    print("nothing too")
+                                    
                                 }
                              
-                                print(goalObj.id ?? "ga ada")
-                                activityViewModel.createActivity(goal: goalObj, activityName: activityTitle, desc: desc, startDate: startDate_, endDate: endDate_, status: false)
+                                activityViewModel.createActivity(goal: goalObj, activityName: activityTitle, desc: desc, startDate: startDate_, endDate: endDate_, completeDate: completeDate_, status: false)
                             }
                            
               
@@ -179,28 +178,17 @@ struct AddActivitySheet: View {
         .onAppear{
             if let goalIdUserDefaults = UserDefaults.standard.string(forKey: "goalId"){
                 let goalId = UUID(uuidString: goalIdUserDefaults)
-                print("before goal id ")
-                print(goalId)
-                guard let goalObj = goalsViewModel.getGoal(goalId: goalId!, user: userViewModel.getLatestUser()!) else {
+                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
                     return
                 }
-                currentGoalName = goalObj.goal ?? ""
-                print("ini apa")
-                print(currentGoalName)
+                if let goalObj = goalsViewModel.getGoal(goalId: goalId!, user: user) {
+                    currentGoalName = goalObj.goal ?? ""
+                }
             }
-
-           
-            
-//            guard let goalObj = goalsViewModel.getGoal(goalId: goalID ?? UUID()) else {
-//                return
-//            }
-//            currentGoal = goalObj.goal ?? ""
-//            print("ini apa")
-//            print(currentGoal)
-
         }
-        .navigationBarBackButtonHidden(true) // Hide the default back button
-        .navigationBarItems(leading: CustomBackButton()) // Use a custom back button
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: CustomBackButton())
     }
     
     
@@ -214,7 +202,7 @@ struct CustomBackButton: View {
         }) {
             HStack{
                 Image(systemName: "chevron.left")
-                    .foregroundColor(Color("text-color"))// Set the color of the back button
+                    .foregroundColor(Color("text-color"))
                     .imageScale(.large)
                 Text("Back")
                     .foregroundColor(Color("text-color"))

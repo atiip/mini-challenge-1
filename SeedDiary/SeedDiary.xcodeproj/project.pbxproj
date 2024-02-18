@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7809382B2B80C058007C2DB2 /* PulsateAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7809382A2B80C058007C2DB2 /* PulsateAnimation.swift */; };
 		7859EB4F2A76B21A0059B812 /* OpeningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB4E2A76B21A0059B812 /* OpeningView.swift */; };
 		7859EB522A76B29C0059B812 /* OpeningModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB512A76B29C0059B812 /* OpeningModel.swift */; };
 		7859EB542A76B3360059B812 /* OpeningComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB532A76B3360059B812 /* OpeningComponent.swift */; };
 		7859EB562A782B330059B812 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB552A782B330059B812 /* RootView.swift */; };
 		7859EB582A789FB10059B812 /* AnimatableVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB572A789FB10059B812 /* AnimatableVector.swift */; };
 		7859EB5A2A78A0060059B812 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB592A78A0060059B812 /* CGPoint.swift */; };
-		7859EB5D2A78A0950059B812 /* BigBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB5C2A78A0950059B812 /* BigBubble.swift */; };
+		7859EB5D2A78A0950059B812 /* MorphingCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB5C2A78A0950059B812 /* MorphingCircle.swift */; };
 		7859EB5F2A78A0CC0059B812 /* SmallCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB5E2A78A0CC0059B812 /* SmallCircle.swift */; };
 		7859EB612A78A1040059B812 /* MorphingCircleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB602A78A1040059B812 /* MorphingCircleShape.swift */; };
 		7859EB632A78A98A0059B812 /* ListJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7859EB622A78A98A0059B812 /* ListJournalView.swift */; };
@@ -33,7 +34,6 @@
 		7891234F2A72703400DF6DFC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7891234E2A72703400DF6DFC /* Preview Assets.xcassets */; };
 		789123512A72703400DF6DFC /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789123502A72703400DF6DFC /* Persistence.swift */; };
 		789123542A72703400DF6DFC /* SeedDiary.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 789123522A72703400DF6DFC /* SeedDiary.xcdatamodeld */; };
-		789123752A756DB300DF6DFC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789123742A756DB300DF6DFC /* CoreDataManager.swift */; };
 		789123892A7573E400DF6DFC /* CircleVariationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789123882A7573E400DF6DFC /* CircleVariationModel.swift */; };
 		7891238B2A7573F600DF6DFC /* CircleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891238A2A7573F600DF6DFC /* CircleModel.swift */; };
 		7891239A2A757D4E00DF6DFC /* GoalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789123992A757D4E00DF6DFC /* GoalsViewModel.swift */; };
@@ -47,16 +47,18 @@
 		789123B12A76A82C00DF6DFC /* ThirdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789123B02A76A82C00DF6DFC /* ThirdView.swift */; };
 		78E52D992AED938D0053A2CB /* ActivityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E52D982AED938D0053A2CB /* ActivityViewModel.swift */; };
 		78E52D9B2AEEB06A0053A2CB /* AddActivitySheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E52D9A2AEEB06A0053A2CB /* AddActivitySheet.swift */; };
+		78F427AB2B8289AF00725CE9 /* DetailGoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F427AA2B8289AF00725CE9 /* DetailGoalsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7809382A2B80C058007C2DB2 /* PulsateAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulsateAnimation.swift; sourceTree = "<group>"; };
 		7859EB4E2A76B21A0059B812 /* OpeningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningView.swift; sourceTree = "<group>"; };
 		7859EB512A76B29C0059B812 /* OpeningModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningModel.swift; sourceTree = "<group>"; };
 		7859EB532A76B3360059B812 /* OpeningComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpeningComponent.swift; sourceTree = "<group>"; };
 		7859EB552A782B330059B812 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		7859EB572A789FB10059B812 /* AnimatableVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatableVector.swift; sourceTree = "<group>"; };
 		7859EB592A78A0060059B812 /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
-		7859EB5C2A78A0950059B812 /* BigBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigBubble.swift; sourceTree = "<group>"; };
+		7859EB5C2A78A0950059B812 /* MorphingCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphingCircle.swift; sourceTree = "<group>"; };
 		7859EB5E2A78A0CC0059B812 /* SmallCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallCircle.swift; sourceTree = "<group>"; };
 		7859EB602A78A1040059B812 /* MorphingCircleShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorphingCircleShape.swift; sourceTree = "<group>"; };
 		7859EB622A78A98A0059B812 /* ListJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListJournalView.swift; sourceTree = "<group>"; };
@@ -77,7 +79,6 @@
 		7891234E2A72703400DF6DFC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		789123502A72703400DF6DFC /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		789123532A72703400DF6DFC /* SeedDiary.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SeedDiary.xcdatamodel; sourceTree = "<group>"; };
-		789123742A756DB300DF6DFC /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		789123882A7573E400DF6DFC /* CircleVariationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleVariationModel.swift; sourceTree = "<group>"; };
 		7891238A2A7573F600DF6DFC /* CircleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleModel.swift; sourceTree = "<group>"; };
 		789123992A757D4E00DF6DFC /* GoalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsViewModel.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 		789123B02A76A82C00DF6DFC /* ThirdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdView.swift; sourceTree = "<group>"; };
 		78E52D982AED938D0053A2CB /* ActivityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewModel.swift; sourceTree = "<group>"; };
 		78E52D9A2AEEB06A0053A2CB /* AddActivitySheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddActivitySheet.swift; sourceTree = "<group>"; };
+		78F427AA2B8289AF00725CE9 /* DetailGoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGoalsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,7 +312,7 @@
 		789123692A72717A00DF6DFC /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				7859EB5C2A78A0950059B812 /* BigBubble.swift */,
+				7859EB5C2A78A0950059B812 /* MorphingCircle.swift */,
 				7859EB5E2A78A0CC0059B812 /* SmallCircle.swift */,
 				7859EB602A78A1040059B812 /* MorphingCircleShape.swift */,
 			);
@@ -354,6 +356,7 @@
 				7859EB702A7E8E920059B812 /* AddGoalsView.swift */,
 				7859EB762A7F48630059B812 /* DetailActivitesView.swift */,
 				78E52D9A2AEEB06A0053A2CB /* AddActivitySheet.swift */,
+				78F427AA2B8289AF00725CE9 /* DetailGoalsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 		7891236E2A7568A000DF6DFC /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				7809382A2B80C058007C2DB2 /* PulsateAnimation.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -384,7 +388,6 @@
 			isa = PBXGroup;
 			children = (
 				789123522A72703400DF6DFC /* SeedDiary.xcdatamodeld */,
-				789123742A756DB300DF6DFC /* CoreDataManager.swift */,
 				789123502A72703400DF6DFC /* Persistence.swift */,
 			);
 			path = CoreData;
@@ -464,8 +467,8 @@
 		789123A42A76A54F00DF6DFC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7859EB4E2A76B21A0059B812 /* OpeningView.swift */,
 				7859EB552A782B330059B812 /* RootView.swift */,
+				7859EB4E2A76B21A0059B812 /* OpeningView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -587,13 +590,14 @@
 				7859EB542A76B3360059B812 /* OpeningComponent.swift in Sources */,
 				7859EB5F2A78A0CC0059B812 /* SmallCircle.swift in Sources */,
 				789123A02A76608C00DF6DFC /* JournalViewModel.swift in Sources */,
+				7809382B2B80C058007C2DB2 /* PulsateAnimation.swift in Sources */,
 				789123A92A76A65C00DF6DFC /* Router.swift in Sources */,
 				7891239A2A757D4E00DF6DFC /* GoalsViewModel.swift in Sources */,
 				7859EB672A78AA7A0059B812 /* PopUpDailyMood.swift in Sources */,
 				789123AF2A76A80E00DF6DFC /* SecondView.swift in Sources */,
 				7859EB6D2A78BB860059B812 /* ActivitiesView.swift in Sources */,
 				7859EB582A789FB10059B812 /* AnimatableVector.swift in Sources */,
-				7859EB5D2A78A0950059B812 /* BigBubble.swift in Sources */,
+				7859EB5D2A78A0950059B812 /* MorphingCircle.swift in Sources */,
 				7891238B2A7573F600DF6DFC /* CircleModel.swift in Sources */,
 				7859EB692A78BB230059B812 /* GardenView.swift in Sources */,
 				78E52D9B2AEEB06A0053A2CB /* AddActivitySheet.swift in Sources */,
@@ -605,8 +609,8 @@
 				7859EB772A7F48630059B812 /* DetailActivitesView.swift in Sources */,
 				789123892A7573E400DF6DFC /* CircleVariationModel.swift in Sources */,
 				7859EB522A76B29C0059B812 /* OpeningModel.swift in Sources */,
+				78F427AB2B8289AF00725CE9 /* DetailGoalsView.swift in Sources */,
 				789123AD2A76A6D200DF6DFC /* AppColors.swift in Sources */,
-				789123752A756DB300DF6DFC /* CoreDataManager.swift in Sources */,
 				789123482A72703400DF6DFC /* SeedDiaryApp.swift in Sources */,
 				78E52D992AED938D0053A2CB /* ActivityViewModel.swift in Sources */,
 			);
@@ -665,7 +669,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -723,7 +727,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = "";
@@ -751,6 +755,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -785,6 +790,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

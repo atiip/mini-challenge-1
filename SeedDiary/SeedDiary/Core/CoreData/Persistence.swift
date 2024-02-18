@@ -15,11 +15,6 @@ struct PersistenceController {
         return container.viewContext
     }
     
-//    var newViewContext : NSManagedObjectContext {
-//        return container.newBackgroundContext()
-//    }
-    
-    
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "SeedDiary")
         if inMemory {
@@ -31,5 +26,6 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+        self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
 }

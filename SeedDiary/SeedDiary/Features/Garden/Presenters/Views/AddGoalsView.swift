@@ -10,29 +10,30 @@ import SwiftUI
 import CoreData
 
 struct AddGoalsView: View {
-    
-    @StateObject var goalsViewModel = GoalsViewModel()
-    @StateObject var userViewModel = PersonalInformationViewModel()
+    @EnvironmentObject var goalViewModel: GoalsViewModel
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @StateObject var activityViewModel = ActivityViewModel()
     
     @State var goal_ = ""
     @State var activity_ = ""
     @State var startDate_ = Date()
     @State var endDate_ = Date().dayAfter
     @State var isShowingAlert = false
+    @State var isGoalsFullAlert = false
     @State var isLoading = false
     
     @Binding var isAddGoalsViewPresented: Bool
     @Binding var isFirstGoals: Bool
     @Binding var addFirstGoalsComplete:Bool
-   
-//    @AppStorage("userID") var userID: String = UserDe
+    @Binding var isUpdateGoal:Bool
     
     let status_ = true
+    
+    
     var body: some View {
         
         ZStack{
             VStack{
-                
             }.frame(
                 minWidth: 0,
                 maxWidth: .infinity,
@@ -65,23 +66,6 @@ struct AddGoalsView: View {
                     }.underlineTextField()
                     Spacer().frame(height:16)
                     
-//                    // MARK: ACTIVITY FIELD
-//                    Section{
-//                        HStack{
-//                            Text("Activity")
-//                                .font(.system(size: 17))
-//                                .fontWeight(.bold)
-//                                .foregroundColor(Color("text-color"))
-//                                .fontWeight(.bold)
-//                            Spacer()
-//                        }.padding(EdgeInsets(top: 0, leading: 24, bottom: 0, trailing: 24))
-//                        HStack {
-//                            TextField("Your Activity", text: $activity_)
-//                                .foregroundColor(Color("subtitle-color"))
-//                            
-//                        }.underlineTextField()
-//                        Spacer().frame(height:16)
-//                    }
                     // MARK: DATEPICKER FIELD
                     HStack{
                         Text("Start Date")
@@ -115,29 +99,10 @@ struct AddGoalsView: View {
                 
                 // MARK: BUTTON
                 HStack(){
-                    Button {
-                        if (goal_.isEmpty) {
-                            isShowingAlert = true
-                        } else {
-                            isLoading = true
-                            let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
-                            guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
-                                return
-                            }
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                                goalsViewModel.createGoal(user: user, goalName: goal_, startDate: Date().convertDate(date: startDate_), endDate: Date().convertDate(date: endDate_), status: false)
-                            }
+                   if (isFirstGoals) {
+                        Button {
                             
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                addFirstGoalsComplete = true
-                                isLoading = false
-                                isAddGoalsViewPresented = false
-                                
-                            }
-                            
-                        }
-                    } label: {
-                        if (isFirstGoals) {
+                        } label: {
                             ZStack {
                                 Capsule()
                                     .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
@@ -154,7 +119,37 @@ struct AddGoalsView: View {
                                         }
                                     )
                             }
-                        }else{
+                        }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            if (goal_.isEmpty) {
+                                isShowingAlert = true
+                            } else {
+                                isLoading = true
+                                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
+                                    return
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                                    goalViewModel.createGoal(user: user, goalName: goal_, startDate: Date().convertDate(date: startDate_), endDate: Date().convertDate(date: endDate_), status: false)
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    addFirstGoalsComplete = true
+                                    userViewModel.isFirstGoalCompleted = true
+                                    isLoading = false
+                                    isAddGoalsViewPresented = false
+                                    UserDefaults.standard.set(true, forKey: "firstLogin")
+                                }
+                                
+                            }
+                        })
+                        .navigationDestination(isPresented: $addFirstGoalsComplete, destination: {
+                            ContentView()
+                        })
+                    }else {
+                        Button {
+                            
+                        } label: {
                             ZStack {
                                 Capsule()
                                     .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
@@ -171,22 +166,48 @@ struct AddGoalsView: View {
                                         }
                                     )
                             }
-                        }
-                        
-                        
+                        }.simultaneousGesture(TapGesture().onEnded {
+                            if (goal_.isEmpty) {
+                                isShowingAlert = true
+                            } else {
+                                isLoading = true
+                                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
+                                    return
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                                    goalViewModel.getGoalsByUser(forPersonalInformation: user)
+                                    if goalViewModel.filteredGoalsByUser.count < 6{
+                                        goalViewModel.createGoal(user: user, goalName: goal_, startDate: Date().convertDate(date: startDate_), endDate: Date().convertDate(date: endDate_), status: false)
+                                    }else{
+                                        isGoalsFullAlert = true
+                                    }
+                                    
+                                }
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    isLoading = false
+                                    isAddGoalsViewPresented = false
+                                    isUpdateGoal = true
+                                }
+                            }
+                        })
                     }
-                    .navigationDestination(isPresented: $addFirstGoalsComplete, destination: {
-                        ContentView()
-                    })
+                    }
                     .frame(width: UIScreen.main.bounds.width)
                     .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
-                }
+                
+            
                 
             }
         }
         .alert(isPresented: $isShowingAlert) {
             Alert(title: Text("Notification"), message: Text("Goal and Activity field cannot be empty!"), dismissButton: .default(Text("OK")))
         }
+        
+            .alert(isPresented: $isGoalsFullAlert) {
+                Alert(title: Text("Notification"), message: Text("Oops, sorry... you have reached the limit to add goals!!"), dismissButton: .default(Text("OK")))
+            }
         .navigationBarBackButtonHidden(true)
         
     }
@@ -194,6 +215,6 @@ struct AddGoalsView: View {
 
 struct AddGoalsView_Previews: PreviewProvider {
     static var previews: some View {
-        AddGoalsView(isAddGoalsViewPresented: .constant(false), isFirstGoals: .constant(false), addFirstGoalsComplete: .constant(false))
+        AddGoalsView(isAddGoalsViewPresented: .constant(false), isFirstGoals: .constant(false), addFirstGoalsComplete: .constant(false), isUpdateGoal: .constant(false))
     }
 }

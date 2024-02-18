@@ -10,6 +10,7 @@ import SwiftUI
 public struct ListJournalView: View {
     @StateObject var journalsViewModel: JournalsViewModel = JournalsViewModel()
     @State private var isSheetCreateJournalActive = false
+    @EnvironmentObject var userViewModel: PersonalInformationViewModel
     
     public func convertDate(date: Date) -> Date {
         let calender = Calendar.current
@@ -45,7 +46,7 @@ public struct ListJournalView: View {
                         ScrollView{
                             // TODO: Fetch data here using for each
                             
-                            ForEach(journalsViewModel.journals) {item in
+                            ForEach(journalsViewModel.filteredJournalsByUsers, id:\.self) {item in
                                 Group{
                                     HStack{
                                         Text("\(item.title ?? " ")")
@@ -53,8 +54,7 @@ public struct ListJournalView: View {
                                             .fontWeight(.regular)
                                         
                                         Spacer()
-                                        // TODO: Disini tinggal dibikin (\(dateString(from: startDate) - \(dateString(from: endDate)
-                                        // contoh fetch ada diatas, jangan lupa bikin func untuk ngedapetin hari dan bulan doang contohnya ada di addGoalviewmodel
+                                        
                                         if let date = item.journalDate {
                                             let formattedDate = self.dateFormatter.string(from: date)
                                             Text("\(formattedDate) ")
@@ -77,10 +77,8 @@ public struct ListJournalView: View {
                     
                     Button(action: {
                         isSheetCreateJournalActive = true
-                        print(isSheetCreateJournalActive)
-                        print("masuk")
                     }, label: {
-                        NavigationLink(destination:CreateJournalView(isJournalViewPresented: $isJournalViewPresented, isSubmitJournal: $isSubmitJournal)) {
+                        NavigationLink(destination: CreateJournalView(isJournalViewPresented: $isJournalViewPresented, isSubmitJournal: $isSubmitJournal).environmentObject(userViewModel)) {
                             ZStack{
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
@@ -91,25 +89,17 @@ public struct ListJournalView: View {
                             
                         }
                     })
-                    //
-                    //                Button(){
-                    //                    isSheetCreateJournalActive = true
-                    //                    print(isSheetCreateJournalActive)
-                    //                    print("masuk")
-                    //                } label: {
-                    //                    Capsule()
-                    //                        .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
-                    //                        .shadow(color: .gray, radius: 10, x: 0, y: 5)
-                    //                        .frame(width: 350 ,height: 50)
-                    //                        .overlay(
-                    //                            Text("Add Journal")
-                    //                                .foregroundColor(.white))
-                    //                }.navigationDestination(isPresented: $isSheetCreateJournalActive) {
-                    //                    CreateJournalView(isJournalViewPresented: $isJournalViewPresented, isSubmitJournal: $isSubmitJournal)
-                    //                }
                 }.frame(width: UIScreen.main.bounds.width)
                     .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
                 
+            }
+            .onAppear{
+                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
+                    return
+                }
+                
+                journalsViewModel.getJournalsByUsers(forUser: user)
             }
         }
     }

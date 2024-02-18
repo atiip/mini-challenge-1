@@ -10,8 +10,14 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var router: Router
     @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @EnvironmentObject var goalViewModel: GoalsViewModel
     @State private var isFirstLogin = true
     @State private var isOpening = false
+    
+    @AppStorage("firstLogin") private var firstLogin:Bool = false
+    @AppStorage("isOpeningCompleted") private var isOpeningCompleted = false
+//    if (UserDefaults.standard.bool(forKey: "isPage"))
+    
     var body: some View {
         NavigationStack(path: $router.path){
             ZStack{
@@ -26,21 +32,25 @@ struct RootView: View {
                 maxHeight: .infinity
                 )
                 .background(Color.white)
-                if isOpening{
+                if !(UserDefaults.standard.bool(forKey: "isOpeningCompleted")) {
                     OpeningView()
                         .environmentObject(router)
                         .environmentObject(userViewModel)
+                        .environmentObject(goalViewModel)
                 }else{
                     ContentView()
                         .environmentObject(router)
                         .environmentObject(userViewModel)
+                        .environmentObject(goalViewModel)
                 }
             }
             .onAppear{
-                if isFirstLogin == true {
-                    isOpening = true
+                
+                if (UserDefaults.standard.bool(forKey: "firstLogin")) == true {
+                    
+                    isOpeningCompleted = true
                 }else{
-                    isOpening = false
+                    isOpeningCompleted = false
                 }
             }
         }

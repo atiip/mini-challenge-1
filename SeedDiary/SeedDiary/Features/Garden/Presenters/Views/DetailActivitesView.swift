@@ -10,29 +10,22 @@ import SwiftUI
 
 struct DetailActivitesView: View {
     @EnvironmentObject var userViewModel: PersonalInformationViewModel
-    @StateObject var goalsViewModel = GoalsViewModel()
+    @EnvironmentObject var goalsViewModel: GoalsViewModel
     @StateObject var activitiesViewModel = ActivityViewModel()
-    //    @StateObject var userViewModel = PersonalInformationViewModel()
     
     let talk: String = "Don’t worry this will be our little secret"
     @State var finalText: String = ""
-    
-    //    @State private var isSheetActivityActive = false
-    //    @State var isFlag = false
-    //    @State private var shouldRefresh = false
-    
     @State private var selectedGoal: UUID? = nil
-    
     @State private var goalsName : [String] = []
-    
     @State private var selectedColor = "Red"
     let colors = ["Red", "Green", "Blue"]
     
-    //    @State var currentGoal: Goal? = nil
     @AppStorage("goalId") var goalId: String = ""
     @AppStorage("goalName") var goalName: String = ""
     
     @Binding var isAddActivityViewPresented : Bool
+    
+    @State var addFirstGoalsComplete = false
     
     public var body: some View {
         NavigationView{
@@ -78,38 +71,20 @@ struct DetailActivitesView: View {
                                 let selectedGoalId = selectedGoal.uuidString
                                 UserDefaults.standard.set(selectedGoalId, forKey: "goalId")
                                 
-                                guard let user = userViewModel.getUserByUserId(userId: userViewModel.userId! ) else {
+                                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
                                     return
-                                    print("ga ada user")
                                 }
+                                
                                 guard let goalObj = goalsViewModel.getGoal(goalId: selectedGoal, user: user) else {
                                     return
                                 }
                                 UserDefaults.standard.set(goalObj.goal, forKey: "goalName")
                      
-//                                print(goalObj.goal ?? "")
+
                             }
                         })
                         .disabled(selectedGoal != nil ? false : true)
-                        //                    Button{
-                        //                        isAddSheetActivity = true
-                        //                    } label:{
-                        //                        VStack{
-                        //                            Image(systemName: "plus.circle")
-                        //                                .resizable()
-                        //                                .scaledToFit()
-                        //                                .frame(width: 25, height: 25)
-                        //                                .foregroundColor(.black)
-                        //                            Text("Add Activity")
-                        //                                .font(.system(size: 12))
-                        //                                .fontWeight(.bold)
-                        //                                .foregroundColor(.black)
-                        //                        }
-                        //                    }
-                        //                    .sheet(isPresented: $isAddSheetActivity) {
-                        //                        AddActivitySheet(isAddSheetActivity: $isAddSheetActivity).presentationDragIndicator(.visible)
-                        //                    }
-                        
                     }.padding()
                     
                     // Content Here
@@ -122,17 +97,12 @@ struct DetailActivitesView: View {
                             Spacer()
                         }.padding()
                         HStack{
-                            
-                            // TODO: Buatlah dropdown goal apa saja yang telah dibuat
-                            
                             Picker("Select Goal", selection: $selectedGoal) {
-                                // Tambahkan pilihan default atau placeholder jika goalsName kosong
                                 Text("Select Goal").tag(nil as UUID?)
                                     .font(.system(size: 14))
                                     .fontWeight(.regular)
                                 
                                 ForEach(goalsViewModel.filteredGoalsByUser, id: \.id) { goal in
-                                    
                                     if let goalId = goal.id {
                                         Text(goal.goal!).tag(goalId as UUID?)
                                             .font(.system(size: 14))
@@ -143,17 +113,22 @@ struct DetailActivitesView: View {
                                 }
                             }
                             .onChange(of: selectedGoal, perform: { newValue in
-                                print("ubah")
+                                
                                 if let selectedGoal = newValue {
-                                    // Call the getActivitiesByGoal method with the selected goal
-                                    if let goal = goalsViewModel.getGoal(goalId: selectedGoal, user: userViewModel.getUserByUserId(userId: userViewModel.userId!)!) {
+                                    let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                                    
+                                    guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
+                                        return
+                                    }
+                                    if let goal = goalsViewModel.getGoal(goalId: selectedGoal, user: user) {
                                         activitiesViewModel.getActivitiesByGoal(forGoal: goal)
                                     }
                                 }else if selectedGoal == nil {
                                     activitiesViewModel.filteredActivityByGoal = []
                                 }
-                            })                            .pickerStyle(.menu)
-                                .tint(Color.black)
+                            })                            
+                            .pickerStyle(.menu)
+                            .tint(Color.black)
                             
                             Spacer()
                         }.padding()
@@ -167,7 +142,6 @@ struct DetailActivitesView: View {
                                 .fontWeight(.bold)
                         }.padding()
                         ScrollView{
-                            // TODO: Fetch data activity setiap goals here using for each
                             ForEach(activitiesViewModel.filteredActivityByGoal, id: \.id) {activity in
                                 Group{
                                     HStack{
@@ -176,8 +150,6 @@ struct DetailActivitesView: View {
                                             .fontWeight(.regular)
                                         
                                         Spacer()
-                                        // TODO: Disini tinggal dibikin (\(dateString(from: startDate) - \(dateString(from: endDate)
-                                        // contoh fetch ada diatas, jangan lupa bikin func untuk ngedapetin hari dan bulan doang contohnya ada di addGoalviewmodel
                                         if let startDate = activity.startDate, let endDate = activity.endDate {
                                             let formattedStartDate = Date.dateFormatter.string(from: startDate)
                                             let formattedEndDate = Date.dateFormatter.string(from: endDate)
@@ -218,7 +190,8 @@ struct DetailActivitesView: View {
                 }
             }
             .onAppear{
-                guard let user = userViewModel.getUserByUserId(userId: userViewModel.userId!) else {
+                let idUser = UUID(uuidString: UserDefaults.standard.string(forKey: "userID") ?? "")
+                guard let user = userViewModel.getUserByUserId(userId: idUser ?? UUID()) else {
                     return
                 }
                 goalsViewModel.getGoalsByUser(forPersonalInformation: user)

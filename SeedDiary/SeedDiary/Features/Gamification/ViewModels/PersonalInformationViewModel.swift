@@ -13,8 +13,13 @@ class PersonalInformationViewModel : ObservableObject {
     // MARK: Fetch all goals data
     @Published var users: [Personal_Information] = []
     
+    @Published var user: Personal_Information?
+    
     @Published var username: String = ""
-    @Published var userId: UUID? = nil
+    @Published var userId: UUID?
+    @Published var isFirstActivity: Bool = false
+    @Published var isFirstActivityCompleted: Bool = false
+    @Published var isFirstGoalCompleted: Bool = false
     
     init() {
       getUsers()
@@ -23,29 +28,11 @@ class PersonalInformationViewModel : ObservableObject {
     public func GetName() -> String {
         return self.username
     }
-//    func deleteUser() {
-//        guard let stores = viewContext.persistentStoreCoordinator?.persistentStores else {
-//            return
-//        }
-//
-//        for store in stores {
-//            do {
-//                try viewContext.persistentStoreCoordinator?.destroyPersistentStore(
-//                    at: store.url!,
-//                    ofType: store.type,
-//                    options: nil
-//                )
-//            } catch {
-//                print("Error deleting store: \(error)")
-//            }
-//        }
-//    }
-//
+
     func save() {
         do {
             try viewContext.save()
             print("save success")
-//            print(users.count)
         }catch {
             print("Error saving")
             let nsError = error as NSError
@@ -66,7 +53,6 @@ class PersonalInformationViewModel : ObservableObject {
     }
 
     func getLatestUser() -> Personal_Information? {
-        print("masuk get lastestUser")
         let request = NSFetchRequest<Personal_Information>(entityName: "Personal_Information")
 //        request.fetchLimit = 1  // Batasi hasil hanya ke satu objek (data terakhir)
 
@@ -89,6 +75,7 @@ class PersonalInformationViewModel : ObservableObject {
         personalInformation.name = username
         save()
         self.userId = idUser
+        self.user = personalInformation
         self.getUsers()
     }
     

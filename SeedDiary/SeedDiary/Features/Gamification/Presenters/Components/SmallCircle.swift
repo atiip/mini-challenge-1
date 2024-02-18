@@ -16,21 +16,13 @@ import SwiftUI
 struct SmallCircle: View {
     
     var idx: Int
-   
-//    @State var isOpacity: Bool
-//    @State var isExploded: Bool
-       @Binding var pola: CircleVariationModel
-   //    @State private var isOpacity = false
-   //    @State private var isExploded = flase
-   
-   
-       @State private var color = Color.blue
     
     var isExploded = false
     var isOpacity = false
     
+    @State private var color = Color.blue
+    @Binding var pola: CircleVariationModel
     @Binding var labelCircle:String
-    
     
     var body: some View {
         if (labelCircle == "Journal"){
@@ -52,7 +44,7 @@ struct SmallCircle: View {
                 .frame(width: 20, height: 20)
                 .foregroundColor(Color("bg-mood-journal"))
                 .position(x:100, y: 200)
-//                .frame(width: 120, height: 120, alignment: .center)
+            //                .frame(width: 120, height: 120, alignment: .center)
                 .offset(
                     x: isExploded ? (Double.random(in: -1...1) * 150) : 0,
                     y: isExploded ? (Double.random(in: -1...1) * 150) : 0)
@@ -74,7 +66,7 @@ struct SmallCircle: View {
                 .animation(.easeInOut.speed(0.6), value: isExploded)
                 .padding()
         }
-       
+        
     }
 }
 

@@ -13,11 +13,12 @@ struct OpeningComponent: View {
     let page: OpeningModel
     @State var finalText: String = ""
     @State var isShowingSheet = false
-    //    @State var name = ""
-    //    @State var pageIndex = 0
+
     @EnvironmentObject var userViewModel: PersonalInformationViewModel
+    @EnvironmentObject var goalViewModel: GoalsViewModel
     @State var isAddGoalsViewPresented: Bool = false
     @State var isFirstGoals: Bool = false
+    @State var isUpdateGoal: Bool = false
     
     @Binding var name: String
     @Binding var pageIndex: Int
@@ -26,7 +27,7 @@ struct OpeningComponent: View {
     
     @AppStorage("userID") var userID: String = ""
     @ObservedObject private var iO = Inject.observer
- 
+    
     
     var body: some View {
         ZStack {
@@ -50,14 +51,11 @@ struct OpeningComponent: View {
                             TextField("Enter name", text: $name).padding()
                                 .onChange(of: name) { newName in
                                     if !newName.isEmpty{
-                                        print("masuk")
                                         isTextFieldFilled = true
-                                        print(isTextFieldFilled)
                                     }
                                     else{
                                         isTextFieldFilled = false
                                     }
-                                    //
                                 }
                         }
                     }
@@ -74,59 +72,32 @@ struct OpeningComponent: View {
                 Spacer().frame(height: 200)
                 if pageIndex == OpeningModel.samplePages.count-1 && isTextFieldFilled == true {
                     ZStack{
-//                        Button(action: {
-//                            isAddGoalsViewPresented.toggle()
-//                        }) {
-//                            ZStack{
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
-//                                    .frame(width: 350, height: 50)
-//                                Text("START YOUR JOURNEY HERE")
-//                                    .foregroundColor(.white)
-//                            }
-//                        }
-//                        .simultaneousGesture(TapGesture().onEnded {
-//                            personalInformationViewModel.createName(name: name)
-//                            isFirstGoals = true
-//                        })
-                        
-                            Button(action: {
-                            }) {
-//                                NavigationLink(destination: ContentView()) {
-//                                    ZStack{
-//                                        RoundedRectangle(cornerRadius: 20)
-//                                            .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
-//                                            .frame(width: 350, height: 50)
-//                                        Text("START YOUR JOURNEY HERE")
-//                                            .foregroundColor(.white)
-//                                    }
-//                                }
-                                NavigationLink(destination: AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete)) {
-                                    ZStack{
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
-                                            .frame(width: 350, height: 50)
-                                        Text("START YOUR JOURNEY HERE")
-                                            .foregroundColor(.white)
-                                    }
+                        Button(action: {
+                        }) {
+                            NavigationLink(destination: AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete, isUpdateGoal: $isUpdateGoal)
+                            
+                            ) {
+                                ZStack{
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color(red: 63/255, green: 120/255, blue: 82/255))
+                                        .frame(width: 350, height: 50)
+                                    Text("START YOUR JOURNEY HERE")
+                                        .foregroundColor(.white)
                                 }
                             }
-                            .simultaneousGesture(TapGesture().onEnded {
-                                userViewModel.createUser(username: name)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
-                                    let user = userViewModel.getLatestUser()
-                                    let stringId = user?.id?.uuidString
-                                    print("string id: \(stringId)")
-                                    UserDefaults.standard.set(stringId, forKey: "userID")
-                                    
-                                    print("user id dari user default: \(UserDefaults.standard.string(forKey: "userID"))")
-//                                    print(String(user.name!))
-                                }
+                        }
+                        .simultaneousGesture(TapGesture().onEnded {
+                            userViewModel.createUser(username: name)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2){
+                                let user = userViewModel.getLatestUser()
+                                let stringId = user?.id?.uuidString
                                 
-                               
-                                isFirstGoals = true
-                            })
-                        //
+                                UserDefaults.standard.set(stringId, forKey: "userID")
+                            }
+                            
+                            
+                            isFirstGoals = true
+                        })
                     }
                     
                 }
@@ -154,19 +125,20 @@ struct OpeningComponent: View {
             }
         }.enableInjection()
         
-        .sheet(isPresented: $isAddGoalsViewPresented) {
-            AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete) .presentationDetents([.height(700)])
-                .presentationDragIndicator(.visible)
-                .onDisappear{
-                    print("hasil")
-                    print(addFirstGoalsComplete)
-                    if addFirstGoalsComplete {
-                        NavigationLink(destination: ContentView().environmentObject(userViewModel), isActive: $addFirstGoalsComplete) {
-                            EmptyView() // EmptyView digunakan untuk mengaktifkan NavigationLink secara dinamis
+            .sheet(isPresented: $isAddGoalsViewPresented) {
+                AddGoalsView(isAddGoalsViewPresented: $isAddGoalsViewPresented, isFirstGoals: $isFirstGoals, addFirstGoalsComplete: $addFirstGoalsComplete, isUpdateGoal: $isUpdateGoal)
+                    .environmentObject(userViewModel)
+                    .presentationDetents([.height(700)])
+                    .presentationDragIndicator(.visible)
+                    .onDisappear{
+                
+                        if addFirstGoalsComplete {
+                            NavigationLink(destination: ContentView().environmentObject(userViewModel), isActive: $addFirstGoalsComplete) {
+                                EmptyView()
+                            }
                         }
                     }
-                }
-        }
+            }
         
     }
     
